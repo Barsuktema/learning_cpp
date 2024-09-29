@@ -1,1 +1,1 @@
-This one test project for diff check
+This one test project
