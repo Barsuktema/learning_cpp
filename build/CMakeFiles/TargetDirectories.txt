@@ -1,0 +1,3 @@
+/home/barsuk/cppcode/learning_cpp-1/build/CMakeFiles/hello_world.dir
+/home/barsuk/cppcode/learning_cpp-1/build/CMakeFiles/edit_cache.dir
+/home/barsuk/cppcode/learning_cpp-1/build/CMakeFiles/rebuild_cache.dir
