@@ -35,7 +35,7 @@ int main()
     test.print();
 
     std::cout << "List Container" << "\n";
-    Array<int> test2;
+    List<int> test2;
     test2.push_back(0);
     test2.push_back(1);
     test2.push_back(2);

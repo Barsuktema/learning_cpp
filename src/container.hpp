@@ -114,8 +114,9 @@ class List{
         } else {
             m_last->next = new_node;
         }
-        m_last = new_node; 
-        m_size += 1;
+        m_last = new_node;
+        m_end = m_last; 
+        m_size ++;
     }
 
     void print() {
@@ -140,17 +141,35 @@ class List{
 
     void erase(int ind) {
         m_last = m_start;
-        for (size_t i = 0; i < m_size; ++i) {
-            if (i==ind) {
-                tmp = m_last;
-                Node* tmp_Node = m_last->next; 
-                tmp_Node->next = tmp->next->next;
-                tmp_Node->next->next->prev = tmp_Node;
-                m_last->prev->next = tmp_Node;
-                m_size -= 1;
-                delete tmp_Node;
+        if (ind==0) {
+            tmp = m_last;
+            m_start = m_last->next;
+            m_last->next->prev = nullptr;
+            delete tmp;
+            m_size --;
+        }
+        if (ind >0 && ind < m_size-1) {
+            for (size_t i = 0; i < m_size-1; ++i) {
+                if (i==ind) {
+                    tmp = m_last;
+                    Node* tmp_Node = m_last->next; 
+                    tmp_Node->next = tmp->next->next;
+                    tmp_Node->next->next->prev = tmp_Node;
+                    m_last->prev->next = tmp_Node;
+                    m_size --;
+                    m_last = m_last->next;
+                    delete tmp;
+                } else {
+                    m_last = m_last->next;
+                }
             }
-            m_last = m_last->next;
+        }
+        if (ind==m_size-1) {
+            m_last = m_end;
+            m_last->prev->next = nullptr;
+            m_end = m_last->prev;
+            delete m_last;
+            m_size--;
         }
     }
 
@@ -164,7 +183,7 @@ class List{
             m_last->prev = newNode;
             newNode->prev = nullptr;
             m_start = newNode;
-            m_size +=1;
+            m_size ++;
         }
         if (pos >0 && pos < m_size) {
             for (size_t i = 0; i < m_size; ++i) {
@@ -174,7 +193,8 @@ class List{
                     tmp = newNode;
                     m_last->prev = tmp;
                     m_last->prev->prev->next = tmp;    
-                    m_size += 1;
+                    m_size ++;
+                    m_last = tmp;
                 }
                 if (m_last->next != nullptr){
                     m_last = m_last->next;
@@ -187,19 +207,19 @@ class List{
             m_end->next = newNode;
             newNode->prev = m_end;
             m_last=m_end;
-            m_size+=1;
+            m_size++;
         }
     }
 
     ~ List() {
         m_last = m_start;
         for (size_t i = 0; i < m_size; ++i) {
-                tmp = m_last;
+                tmp = m_last->next;
                 delete m_last;
-                m_last = tmp->next;
-        }
-        delete[] tmp;
+                m_last = tmp;
+            }
         m_size = 0;
+        
     }
 
     private:
