@@ -11,7 +11,6 @@
 #include <vector>
 #include <chrono>
 #include <thread>
-#include <mutex>
 #include <numeric>
 
 const size_t TOPK = 10;
@@ -20,7 +19,7 @@ using Counter = std::map<std::string, std::size_t>;
 
 std::string tolower(const std::string &str);
 
-void count_words(Counter& counter, std::mutex& mtx, char* file);
+void count_words(Counter& counter, char* file);
 
 void print_topk(std::ostream& stream, const Counter&, const size_t k);
 
@@ -30,7 +29,6 @@ int main(int argc, char *argv[]) {
         std::cerr << "Usage: topk_words [FILES...]\n";
         return EXIT_FAILURE;
     }
-    std::mutex mtx;
     std::vector<std::thread> ths;
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<Counter> count;
@@ -38,7 +36,7 @@ int main(int argc, char *argv[]) {
     count.reserve(argc);  
     for (int i = 1; i < argc; ++i) {
         count.push_back(freq_dict);
-        ths.push_back(std::thread(count_words, ref(count.back()), ref(mtx), argv[i]));
+        ths.push_back(std::thread(count_words, ref(count.back()), argv[i]));
     }
 
     for (auto &th: ths) {
@@ -73,7 +71,7 @@ std::string tolower(const std::string &str) {
 };
 
 
-void count_words(Counter& counter, std::mutex& mtx, char* file) {
+void count_words(Counter& counter, char* file) {
     std::ifstream in{file};
     std::for_each(std::istream_iterator<std::string>(in),
                   std::istream_iterator<std::string>(),
